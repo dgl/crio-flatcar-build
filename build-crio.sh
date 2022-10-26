@@ -25,7 +25,8 @@ pushd cri-o
 git fetch origin
 git checkout ${CRIO_VERSION_TAG}
 git apply ${CHECKOUT_DIR}/masked-paths.patch
-git apply ${CHECKOUT_DIR}/listenerpath-seccomp-notify.patch
+#git apply ${CHECKOUT_DIR}/listenerpath-seccomp-notify.patch
+git apply ${CHECKOUT_DIR}/chmod-volumes-logging.patch
 popd
 
 if [ ! -d conmon ]; then
