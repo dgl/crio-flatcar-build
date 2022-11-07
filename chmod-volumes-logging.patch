@@ -1,27 +1,12 @@
 diff --git a/server/container_create_linux.go b/server/container_create_linux.go
-index dc1fa9206..60c171c9e 100644
+index 5e3614d..dc1fa92 100644
 --- a/server/container_create_linux.go
 +++ b/server/container_create_linux.go
-@@ -63,12 +63,14 @@ func (s *Server) createContainerPlatform(ctx context.Context, container *oci.Con
- 
- // makeAccessible changes the path permission and each parent directory to have --x--x--x
- func makeAccessible(path string, uid, gid int, doChown bool) error {
-+	logrus.Warnf("makeAccessible Chown: %s", path)
- 	if doChown {
- 		if err := os.Chown(path, uid, gid); err != nil {
- 			return errors.Wrapf(err, "cannot chown %s to %d:%d", path, uid, gid)
- 		}
- 	}
- 	for ; path != "/"; path = filepath.Dir(path) {
-+		logrus.Warnf("makeAccessible entering loop: %s", path)
- 		st, err := os.Stat(path)
- 		if err != nil {
- 			if os.IsNotExist(err) {
-@@ -80,6 +82,7 @@ func makeAccessible(path string, uid, gid int, doChown bool) error {
- 			continue
- 		}
- 		if st.Mode()&0o111 != 0o111 {
-+			logrus.Warnf("makeAccessible running CHMOD: %s", path)
- 			if err := os.Chmod(path, st.Mode()|0o111); err != nil {
- 				return err
- 			}
+@@ -91,7 +91,6 @@ func makeAccessible(path string, uid, gid int, doChown bool) error {
+ // makeMountsAccessible makes sure all the mounts are accessible from the user namespace
+ func makeMountsAccessible(uid, gid int, mounts []rspec.Mount) error {
+        for _, m := range mounts {
+-               logrus.Warnln("debug mount:", m)
+                if m.Type == "bind" || util.StringInSlice("bind", m.Options) {
+                        if err := makeAccessible(m.Source, uid, gid, false); err != nil {
+                                return err
