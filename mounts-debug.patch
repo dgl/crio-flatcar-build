@@ -16,7 +16,7 @@ index dc1fa9206..2df9058ae 100644
  	for ; path != "/"; path = filepath.Dir(path) {
 +		var fsinfo unix.Statfs_t
 +		unix.Statfs(path, &fsinfo)
-+		logrus.Warnf("debug fsinfo: %v", fsinfo)
++		logrus.Warnf("debug fsinfo: %+v", fsinfo)
 +		logrus.Warnf("debug path: %s", path)
  		st, err := os.Stat(path)
  		if err != nil {
