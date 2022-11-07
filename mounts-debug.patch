@@ -1,0 +1,23 @@
+diff --git a/server/container_create_linux.go b/server/container_create_linux.go
+index dc1fa9206..2df9058ae 100644
+--- a/server/container_create_linux.go
++++ b/server/container_create_linux.go
+@@ -5,6 +5,7 @@ package server
+ 
+ import (
+ 	"fmt"
++	"golang.org/x/sys/unix"
+ 	"os"
+ 	"path/filepath"
+ 	"sort"
+@@ -69,6 +70,10 @@ func makeAccessible(path string, uid, gid int, doChown bool) error {
+ 		}
+ 	}
+ 	for ; path != "/"; path = filepath.Dir(path) {
++		var fsinfo unix.Statfs_t
++		unix.Statfs(path, &fsinfo)
++		logrus.Warnf("debug fsinfo: %+v", fsinfo)
++		logrus.Warnf("debug path: %s", path)
+ 		st, err := os.Stat(path)
+ 		if err != nil {
+ 			if os.IsNotExist(err) {
