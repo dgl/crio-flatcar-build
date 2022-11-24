@@ -27,7 +27,8 @@ git checkout ${CRIO_VERSION_TAG}
 git apply ${CHECKOUT_DIR}/masked-paths.patch
 git apply ${CHECKOUT_DIR}/listenerpath-seccomp-notify.patch
 git apply ${CHECKOUT_DIR}/update-libseccomp-golang.patch
-git apply ${CHECKOUT_DIR}/mounts-debug.patch
+git apply ${CHECKOUT_DIR}/skip-nfs-mounts.patch
+
 popd
 
 if [ ! -d conmon ]; then
