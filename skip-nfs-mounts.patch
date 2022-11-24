@@ -1,0 +1,46 @@
+From 79e698ec72dcae5a21c5a688b3d639bd59cf542a Mon Sep 17 00:00:00 2001
+From: David Leadbeater <dgl@dgl.cx>
+Date: Fri, 18 Nov 2022 16:28:41 +1100
+Subject: [PATCH] Skip NFS mounts when fixing permissions for user namespaces
+
+It's possible an NFS mount may not grant root permission to see it, but
+the user is able to see it. In general the NFS mount will be setup
+correctly beforehand, so there's little value in trying to fix
+permissions.
+
+Co-authored-by: Isham Araia <ishamaraia@gmail.com>
+---
+ server/container_create_linux.go | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/server/container_create_linux.go b/server/container_create_linux.go
+index dc1fa9206..97ec470c5 100644
+--- a/server/container_create_linux.go
++++ b/server/container_create_linux.go
+@@ -36,6 +36,7 @@ import (
+ 	"github.com/pkg/errors"
+ 	"github.com/sirupsen/logrus"
+ 	"golang.org/x/net/context"
++	"golang.org/x/sys/unix"
+ 
+ 	"github.com/intel/goresctrl/pkg/blockio"
+ )
+@@ -69,6 +70,15 @@ func makeAccessible(path string, uid, gid int, doChown bool) error {
+ 		}
+ 	}
+ 	for ; path != "/"; path = filepath.Dir(path) {
++
++		var fsinfo unix.Statfs_t
++		err := unix.Statfs(path, &fsinfo)
++		// Skip chmod for NFS mounts, as even root may not have permission on them.
++		// Ignore error, to avoid duplicating the stat logic below.
++		if err == nil && fsinfo.Type == unix.NFS_SUPER_MAGIC {
++			continue
++		}
++
+ 		st, err := os.Stat(path)
+ 		if err != nil {
+ 			if os.IsNotExist(err) {
+-- 
+2.36.2
+
