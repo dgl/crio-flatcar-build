@@ -184,7 +184,7 @@ require (
 	github.com/russross/blackfriday v1.5.2 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/saschagrunert/go-modiff v1.3.0 // indirect
-	github.com/seccomp/libseccomp-golang v0.9.2-0.20200616122406-847368b35ebf // indirect
+	github.com/seccomp/libseccomp-golang v0.10.0 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.20.12 // indirect
 	github.com/spf13/cobra v1.2.1 // indirect
