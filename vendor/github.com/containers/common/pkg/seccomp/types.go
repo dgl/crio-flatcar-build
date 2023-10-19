@@ -10,9 +10,11 @@ type Seccomp struct {
 	DefaultErrnoRet *uint  `json:"defaultErrnoRet,omitempty"`
 	// Architectures is kept to maintain backward compatibility with the old
 	// seccomp profile.
-	Architectures []Arch         `json:"architectures,omitempty"`
-	ArchMap       []Architecture `json:"archMap,omitempty"`
-	Syscalls      []*Syscall     `json:"syscalls"`
+	Architectures    []Arch         `json:"architectures,omitempty"`
+	ArchMap          []Architecture `json:"archMap,omitempty"`
+	Syscalls         []*Syscall     `json:"syscalls"`
+	ListenerPath     string         `json:"listenerPath,omitempty"`
+	ListenerMetadata string         `json:"listenerMetadata,omitempty"`
 }
 
 // Architecture is used to represent a specific architecture
